@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-imagetolibrary" version="0.0.1">
+    <name>ImageToLibrary</name>
+    <description>Cordova ImageToLibrary Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,image,base64,library</keywords>
+    <js-module src="www/ImageToLibraryPlugin.js" name="imagetolibrary">
+        <clobbers target="imagetolibrary" />
+    </js-module>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="ImageToLibrary">
+                <param name="ios-package" value="ImageToLibraryPlugin"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/ImageToLibraryPlugin.h" />
+        <source-file src="src/ios/ImageToLibraryPlugin.m" />
+    </platform>
+</plugin>
