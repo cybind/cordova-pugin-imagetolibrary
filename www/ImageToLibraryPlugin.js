@@ -1,11 +1,10 @@
-cordova.define("com.digitalpalette.pizap.imagetolibrary.imagetolibrary", function(require, exports, module) {
-    var exports;
+var exec = require('cordova/exec');
 
-    exports = {
-		saveToLibrary: function(types, success, fail) {
-		    Cordova.exec(success, fail, "ImageToLibraryPlugin", "saveImage", types);
-		}
-	};
+var ImageToLibraryPlugin = {
+    saveToLibrary: function(types, success, fail) {
+        console.log('calling ImageToLibraryPlugin.js');
+        exec(success, fail, "ImageToLibraryPlugin", "saveImage", types);
+    }
+};
 
-    module.exports = exports;
-});
+module.exports = ImageToLibraryPlugin;

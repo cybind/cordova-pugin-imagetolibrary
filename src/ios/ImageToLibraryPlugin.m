@@ -73,7 +73,7 @@
         
         }];
         
-        [self.library release];
+        // [self.library release];
     }
 }
 
