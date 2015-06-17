@@ -27,10 +27,8 @@ typedef void(^SaveImageCompletion)(NSError* error, NSString* url);
 
 -(void)removeImage:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 
--(void)saveImageToLibrary: (UIImage *)image asThumb:(BOOL)isThumb;
+-(void)saveImageToLibrary: (UIImage *)image;
 
 -(void)saveImage:(UIImage*)image toAlbum:(NSString*)albumName withCompletionBlock:(SaveImageCompletion)completionBlock;
-
--(UIImage *)imageWithImage:(UIImage *)image convertToSize:(CGSize)size;
 
 @end

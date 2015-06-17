@@ -24,57 +24,26 @@
 
     // Get the string that javascript sent us
     NSString *stringObtainedFromJavascript = [command.arguments objectAtIndex:0];
-    NSNumber *isThumbNumber = [command.arguments objectAtIndex:1];
-    
-    BOOL isThumb = [isThumbNumber boolValue];
 
     //Saving image to divice library
     NSURL *url = [NSURL URLWithString:stringObtainedFromJavascript];    
     NSData *imageData = [NSData dataWithContentsOfURL:url];
     UIImage *image = [UIImage imageWithData:imageData];
-    [self saveImageToLibrary:image asThumb:isThumb];
+    [self saveImageToLibrary:image];
     
 }
 
 
-- (void) saveImageToLibrary: (UIImage *)image asThumb:(BOOL)isThumb
+- (void) saveImageToLibrary: (UIImage *)image
 {
-    //check if Pizap album is created otherwise create it
 
+    self.library = [[ALAssetsLibrary alloc] init];
+
+    [self saveImage:image toAlbum:@"Imaginary" withCompletionBlock:^(NSError *error, NSString* url) {
+
+        [self saveImageCallback:error url:url];
     
-    if (isThumb) {
-        //image = [self imageWithImage:image convertToSize:CGSizeMake(150,120)];
-    
-        NSString* path = [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/temp_thumb.png"];
-
-        BOOL ok = [[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil];
-
-        if (!ok) {
-            NSLog(@"Error creating file %@", path);
-        } else {
-            NSFileHandle* myFileHandle = [NSFileHandle fileHandleForWritingAtPath:path];
-            [myFileHandle writeData:UIImagePNGRepresentation(image)];
-            [myFileHandle closeFile];
-        }
-        
-        NSLog(@"IS THUMB: YES");
-        
-        [self saveImageCallback:nil url:path];
-
-    } else {
-
-        NSLog(@"IS THUMB: NO");
-        
-        self.library = [[ALAssetsLibrary alloc] init];
-    
-        [self saveImage:image toAlbum:@"Pizap" withCompletionBlock:^(NSError *error, NSString* url) {
-
-            [self saveImageCallback:error url:url];
-        
-        }];
-        
-        // [self.library release];
-    }
+    }];
 }
 
 -(void)saveImageCallback:(NSError*)error url:(NSString*)imageUrl
@@ -97,7 +66,6 @@
     if(!isError)
     {
         // Call the javascript success function
-        //[self writeJavascript: [pluginResult resulWith]];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: stringToReturn];
     }
     else
@@ -140,26 +108,13 @@
                                 NSLog(@"%@: Error saving image: %@", [self class], [writeError localizedDescription]);
                             }
 
-                           
                             //run the completion block
                             dispatch_async( dispatch_get_main_queue(), ^{
                                
                                completionBlock(nil, path);
                             });
                            
-                           
-                           //add the asset to the custom photo album
-                           //[self addAssetURL: assetURL toAlbum:albumName withCompletionBlock:completionBlock];
-                           
                        }];
-}
-
-- (UIImage *)imageWithImage:(UIImage *)image convertToSize:(CGSize)size {
-    UIGraphicsBeginImageContext(size);
-    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    UIImage *destImage = UIGraphicsGetImageFromCurrentImageContext();    
-    UIGraphicsEndImageContext();
-    return destImage;
 }
 
 @end
